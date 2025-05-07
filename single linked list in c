@@ -1,0 +1,67 @@
+#include <stdio.h>
+#include<stdlib.h>
+ // node structure 
+struct Node {
+  int data ;
+  struct Node* next;
+};   
+  //Head pointer of the list 
+struct Node *head=NULL;
+
+// Insert at tail
+void insertattail(int value){
+    struct Node*newNode=(struct Node*)malloc(sizeof(struct Node));
+    newNode->data=value;
+    newNode->next=NULL;
+    if(head==NULL){
+        head=newNode;
+    }
+    else{
+        struct Node* temp=head;
+        while(temp->next!=NULL){
+            temp=temp->next;
+        }
+        temp->next=newNode;
+    }
+}
+
+
+//delete at head
+void deleteathead(){
+    if(head==NULL){
+        printf("List is empty\n");
+        return ;
+    }
+    struct Node* temp=head;
+    head=head->next;
+    free(temp);
+}
+
+// Display the list 
+void Display(){
+    if(head==NULL){
+        printf("list is empty\n");
+        return ;
+    }
+    struct Node* temp=head;
+    while(temp!=NULL){
+        printf("%d->",temp->data);
+        temp=temp->next;
+    }
+    printf("NULL\n");
+}
+int main() {
+	// your code goes here
+ insertattail(10);
+    insertattail(20);
+    insertattail(30);
+
+    printf("Linked List after insertion:\n");
+    Display();
+
+    deleteathead();
+    printf("Linked List after deleting head:\n");
+    Display();
+ return 0;
+}
+
