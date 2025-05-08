@@ -1,67 +1,144 @@
 #include <stdio.h>
 #include<stdlib.h>
- // node structure 
-struct Node {
-  int data ;
-  struct Node* next;
-};   
-  //Head pointer of the list 
-struct Node *head=NULL;
-
-// Insert at tail
-void insertattail(int value){
-    struct Node*newNode=(struct Node*)malloc(sizeof(struct Node));
-    newNode->data=value;
+struct Node{
+    int data;
+    struct Node* next;
+};
+struct Node *createNode(int data){
+    struct Node* newNode=(struct Node*)malloc(sizeof(struct Node));
+    newNode->data=data;
     newNode->next=NULL;
-    if(head==NULL){
-        head=newNode;
-    }
-    else{
-        struct Node* temp=head;
-        while(temp->next!=NULL){
-            temp=temp->next;
-        }
-        temp->next=newNode;
-    }
+    return newNode;
 }
 
-
-//delete at head
-void deleteathead(){
-    if(head==NULL){
-        printf("List is empty\n");
-        return ;
-    }
-    struct Node* temp=head;
-    head=head->next;
-    free(temp);
+// Function to insert a new element at the beginning of the singly linked list
+void insertatfirst(struct Node**head ,int data){
+    struct Node* newNode=createNode(data);
+    newNode->next=*head;
+    *head=newNode;   
 }
-
-// Display the list 
-void Display(){
+// Function to insert a new element at the end of the singly linked list
+void insertatend(struct Node** head ,int data){
+    struct Node* newNode=createNode(data);
     if(head==NULL){
-        printf("list is empty\n");
+        *head=newNode;
         return ;
     }
-    struct Node* temp=head;
-    while(temp!=NULL){
-        printf("%d->",temp->data);
+    struct Node* temp=*head;
+    while(temp->next!=NULL){
         temp=temp->next;
     }
-    printf("NULL\n");
+    temp->next=newNode;
+}
+// Function to insert a new element at a specific position in the singly linked list
+void insertatposition(struct Node** head,int data ,int position){
+    struct Node* newNode = createNode(data);
+    if(position==0){
+        insertatfirst(head,data);
+        return;
+    }
+    struct Node* temp=*head;
+    for(int i=0;temp!=NULL&&i<position-1;i++){
+        temp=temp->next;
+    }
+    if(temp==NULL){
+        printf("POstion out of range \n");
+        free(newNode);
+        return;
+    }
+    newNode->next=temp->next;
+    temp->next=newNode;   
+}
+
+// Function to delete the first node of the singly linked list
+void deletefromfirst(struct Node **head){
+    if(head==NULL){
+        printf("list is empty");
+        return;
+    }
+    struct Node *temp=*head;
+    *head=temp->next;
+    free(temp);
+}
+// Function to delete the last node of the singly linked list
+void deleteatend(struct Node** head){
+    if(*head==NULL){
+        printf("list is empty");
+        return ;
+    }
+    struct Node* temp=*head;
+    if(temp->next==NULL){
+        free(temp);
+        *head=NULL;
+        return ;
+    }
+    while(temp->next->next!=NULL){
+        temp=temp->next;
+    }
+    free(temp->next);
+    temp->next=NULL;
+}
+
+// Function to delete a node at a specific position in the singly linked list
+void deleteatposition(struct Node** head ,int position){
+    if(*head==NULL){
+        printf("list is empty");
+        return ;
+    }
+    struct Node* temp =*head;
+    for(int i=0;temp!=NULL&&i<position-1;i++){
+        temp=temp->next;
+    }
+    if(temp==NULL||temp->next==NULL){
+         printf("position out of range");
+         return ;
+    }
+    struct Node* next=temp->next->next;
+    free(temp->next);
+    temp->next=next;
+}
+void print(struct Node* head){
+    struct Node* temp=head;
+    while(temp!=NULL){
+        printf("%d-",temp->data);
+        temp=temp->next;
+        }
+        printf("Null\n");
 }
 int main() {
-	// your code goes here
- insertattail(10);
-    insertattail(20);
-    insertattail(30);
-
-    printf("Linked List after insertion:\n");
-    Display();
-
-    deleteathead();
-    printf("Linked List after deleting head:\n");
-    Display();
+ struct Node* head = NULL;
+    
+    insertatfirst(&head, 10);
+    printf("Linked list after inserting the node:10 at the beginning \n");
+    print(head); 
+    
+    printf("Linked list after inserting the node:20 at the end \n");
+    insertatend(&head, 20);
+    print(head); 
+    
+    printf("Linked list after inserting the node:5 at the end \n");
+    insertatend(&head, 5);
+    print(head); 
+    
+    printf("Linked list after inserting the node:30 at the end \n");
+    insertatend(&head, 30);
+    print(head); 
+    
+    printf("Linked list after inserting the node:15 at position 2 \n");
+    insertatposition(&head, 15, 2);
+    print(head);
+    
+    printf("Linked list after deleting the first node: \n");
+    deletefromfirst(&head);
+    print(head); 
+    
+    printf("Linked list after deleting the last node: \n");
+    deleteatend(&head);
+    print(head); 
+    
+    printf("Linked list after deleting the node at position 1: \n");
+    deleteatposition(&head, 1);
+    print(head); 
  return 0;
 }
 
